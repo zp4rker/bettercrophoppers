@@ -1,0 +1,6 @@
+name: BetterCropHoppers
+main: com.zp4rker.bettercrophoppers.BetterCropHoppers
+version: ${project.version}
+api-version: 1.8.8
+author: zp4rker
+description: A crophopper plugin for 1.8 that actually works, doesn't throw errors in console and isn't slower than a snail.
