@@ -3,17 +3,9 @@ package com.zp4rker.bettercrophoppers
 import com.zp4rker.bettercrophoppers.commands.GiveHopper
 import com.zp4rker.bettercrophoppers.listeners.BlockPlace
 import com.zp4rker.bettercrophoppers.listeners.HopperPickup
-import com.zp4rker.bettercrophoppers.utils.removeItems
-import com.zp4rker.bettercrophoppers.utils.spaceLeft
+import com.zp4rker.bettercrophoppers.listeners.ItemTransfer
 import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.block.Hopper
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.ItemSpawnEvent
-import org.bukkit.event.inventory.InventoryMoveItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 val hopperName: String = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c&lHopper")
@@ -21,7 +13,7 @@ val hopperName: String = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c
 class BetterCropHoppers : JavaPlugin() {
 
     override fun onEnable() {
-        registerListeners(TestListener(this), BlockPlace(this), HopperPickup())
+        registerListeners(BlockPlace(this), HopperPickup(), ItemTransfer(this))
 
         getCommand("givehopper").executor = GiveHopper
 
@@ -32,47 +24,4 @@ class BetterCropHoppers : JavaPlugin() {
         listeners.forEach { server.pluginManager.registerEvents(it, this) }
     }
 
-}
-
-class TestListener(private val plugin: JavaPlugin) : Listener {
-    @EventHandler
-    fun onItemSpawn(event: ItemSpawnEvent) {
-        if (event.entity.itemStack.type != Material.CACTUS && event.entity.itemStack.type != Material.SUGAR_CANE) return
-
-        for (hopper in event.entity.location.chunk.tileEntities.filterIsInstance<Hopper>()) {
-            if (hopper.hasMetadata("crophopper") && hopper.getMetadata("crophopper")[0].asBoolean()) {
-                event.entity.remove()
-                if (hopper.inventory.spaceLeft(event.entity.itemStack) < 1) continue
-                hopper.inventory.addItem(event.entity.itemStack)
-            }
-        }
-    }
-
-    @EventHandler
-    fun onTransfer(event: InventoryMoveItemEvent) {
-        if (event.source.holder !is Hopper) return
-
-        val hopper = event.source.holder as Hopper
-        if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
-
-        event.isCancelled = true
-
-        plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
-            val hopperLoc = hopper.block.location
-            val newHopper = hopperLoc.block.state as Hopper
-            val remainder = newHopper.inventory.removeItems(ItemStack(event.item.type, 10))
-            event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
-        }, 1)
-    }
-
-    @EventHandler
-    fun onInteract(event: PlayerInteractEvent) {
-        if (event.clickedBlock == null) return
-        if (event.clickedBlock.state !is Hopper) return
-
-        val hopper = event.clickedBlock.state as Hopper
-        if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
-
-        event.player.sendMessage("You found a custom hopper, well done!")
-    }
 }
