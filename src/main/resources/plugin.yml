@@ -4,3 +4,9 @@ version: ${project.version}
 api-version: 1.8.8
 author: zp4rker
 description: A crophopper plugin for 1.8 that actually works, doesn't throw errors in console and isn't slower than a snail.
+
+commands:
+  givehopper:
+    description: Gives a CropHopper to the player.
+    permission: bettercrophoppers.give
+    usage: /givehopper
