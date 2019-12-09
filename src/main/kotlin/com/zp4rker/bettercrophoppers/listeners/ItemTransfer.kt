@@ -23,6 +23,7 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
             val newHopper = hopperLoc.block.state as Hopper
             val remainder = newHopper.inventory.removeItems(ItemStack(event.item.type, 10))
             event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
+            println("added ${10 - remainder} items")
         }, 1)
     }
 }

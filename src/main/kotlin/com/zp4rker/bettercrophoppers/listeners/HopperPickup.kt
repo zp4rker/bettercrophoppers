@@ -1,12 +1,12 @@
 package com.zp4rker.bettercrophoppers.listeners
 
-import com.zp4rker.bettercrophoppers.utils.spaceLeft
 import org.bukkit.Material
 import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ItemSpawnEvent
 import org.bukkit.event.inventory.InventoryPickupItemEvent
+import org.bukkit.util.Vector
 
 class HopperPickup: Listener {
     @EventHandler
@@ -29,9 +29,8 @@ class HopperPickup: Listener {
 
         for (hopper in event.entity.location.chunk.tileEntities.filterIsInstance<Hopper>()) {
             if (hopper.hasMetadata("crophopper") && hopper.getMetadata("crophopper")[0].asBoolean()) {
-                event.entity.remove()
-                if (hopper.inventory.spaceLeft(event.entity.itemStack) < 1) continue
-                hopper.inventory.addItem(event.entity.itemStack)
+                event.entity.teleport(hopper.location.add(0.0, 2.0, 0.0))
+                event.entity.velocity = Vector(0.0, -0.5, 0.0)
             }
         }
     }
