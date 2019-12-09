@@ -23,10 +23,8 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
         event.isCancelled = true
 
         plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
-            val hopperLoc = hopper.block.location
-            val newHopper = hopperLoc.block.state as Hopper
-            val remainder = newHopper.inventory.removeItems(ItemStack(event.item.type, 10))
-            event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
+            val remainder = hopper.inventory.removeItems(ItemStack(event.item.type, 64))
+            event.destination.addItem(ItemStack(event.item.type, 64 - remainder))
         }, 1)
     }
 
