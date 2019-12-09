@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 
 class HopperPickup(private val plugin: JavaPlugin): Listener {
+
     @EventHandler
     fun onHopperPickup(event: InventoryPickupItemEvent) {
         if (event.inventory.holder !is Hopper) return
@@ -39,4 +40,5 @@ class HopperPickup(private val plugin: JavaPlugin): Listener {
             }
         }
     }
+
 }

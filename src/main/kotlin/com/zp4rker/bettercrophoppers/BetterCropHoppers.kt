@@ -20,8 +20,6 @@ class BetterCropHoppers : JavaPlugin() {
         logger.info("Successfully enabled!")
     }
 
-    private fun registerListeners(vararg listeners: Listener) {
-        listeners.forEach { server.pluginManager.registerEvents(it, this) }
-    }
+    private fun registerListeners(vararg listeners: Listener) = listeners.forEach { server.pluginManager.registerEvents(it, this) }
 
 }

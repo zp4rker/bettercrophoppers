@@ -11,6 +11,7 @@ import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
 class ItemTransfer(private val plugin: JavaPlugin): Listener {
+
     @EventHandler
     fun onTransfer(event: InventoryMoveItemEvent) {
         if (event.source.holder !is Hopper) return
@@ -28,4 +29,5 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
             event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
         }, 1)
     }
+
 }

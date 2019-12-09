@@ -9,10 +9,12 @@ import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
 class BlockPlace(private val plugin: JavaPlugin) : Listener {
+
     @EventHandler
     fun onPlace(event: BlockPlaceEvent) {
         if (event.blockPlaced.state is Hopper && event.itemInHand.itemMeta.displayName == hopperName) {
             event.blockPlaced.setMetadata("crophopper", FixedMetadataValue(plugin, true))
         }
     }
+
 }
