@@ -27,12 +27,10 @@ fun Inventory.removeItems(itemStack: ItemStack): Int {
         if (currentSlot.value.amount >= itemStack.amount) {
             val newAmount = currentSlot.value.amount - itemStack.amount
             newSlot = if (newAmount == 0) ItemStack(Material.AIR) else ItemStack(itemStack.type, newAmount)
-            remaining = 0
-            println("removed ${itemStack.amount} items")
+            remaining -= itemStack.amount
         } else {
             newSlot = ItemStack(Material.AIR)
-            remaining = itemStack.amount - currentSlot.value.amount
-            println("removed ${currentSlot.value.amount} items")
+            remaining -= currentSlot.value.amount
         }
 
         newContents[currentSlot.key] = newSlot

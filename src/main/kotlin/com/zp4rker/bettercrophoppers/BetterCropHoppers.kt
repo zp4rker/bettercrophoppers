@@ -13,7 +13,7 @@ val hopperName: String = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c
 class BetterCropHoppers : JavaPlugin() {
 
     override fun onEnable() {
-        registerListeners(BlockPlace(this), HopperPickup(), ItemTransfer(this))
+        registerListeners(BlockPlace(this), HopperPickup(this), ItemTransfer(this))
 
         getCommand("givehopper").executor = GiveHopper
 

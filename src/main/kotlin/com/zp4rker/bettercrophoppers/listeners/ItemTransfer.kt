@@ -1,11 +1,13 @@
 package com.zp4rker.bettercrophoppers.listeners
 
+import com.zp4rker.bettercrophoppers.hopperName
 import com.zp4rker.bettercrophoppers.utils.removeItems
 import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
 class ItemTransfer(private val plugin: JavaPlugin): Listener {
@@ -14,6 +16,7 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
         if (event.source.holder !is Hopper) return
 
         val hopper = event.source.holder as Hopper
+        if (hopper.inventory.name == hopperName && !hopper.hasMetadata("crophopper")) hopper.setMetadata("crophopper", FixedMetadataValue(plugin, true))
         if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
 
         event.isCancelled = true
@@ -23,7 +26,6 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
             val newHopper = hopperLoc.block.state as Hopper
             val remainder = newHopper.inventory.removeItems(ItemStack(event.item.type, 10))
             event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
-            println("added ${10 - remainder} items")
         }, 1)
     }
 }
