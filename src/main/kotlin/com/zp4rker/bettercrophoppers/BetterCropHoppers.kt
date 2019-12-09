@@ -3,6 +3,7 @@ package com.zp4rker.bettercrophoppers
 import com.zp4rker.bettercrophoppers.commands.GiveHopper
 import com.zp4rker.bettercrophoppers.listeners.BlockPlace
 import com.zp4rker.bettercrophoppers.listeners.HopperPickup
+import com.zp4rker.bettercrophoppers.utils.removeItems
 import com.zp4rker.bettercrophoppers.utils.spaceLeft
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.ItemSpawnEvent
 import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 val hopperName: String = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c&lHopper")
@@ -53,7 +55,14 @@ class TestListener(private val plugin: JavaPlugin) : Listener {
         val hopper = event.source.holder as Hopper
         if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
 
-        event.item = event.item.apply { amount = 64 }
+        event.isCancelled = true
+
+        plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
+            val hopperLoc = hopper.block.location
+            val newHopper = hopperLoc.block.state as Hopper
+            val remainder = newHopper.inventory.removeItems(ItemStack(Material.CACTUS, 10))
+            event.destination.addItem(ItemStack(Material.CACTUS, 10 - remainder))
+        }, 1)
     }
 
     @EventHandler
