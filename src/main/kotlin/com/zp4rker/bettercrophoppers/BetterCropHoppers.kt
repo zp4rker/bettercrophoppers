@@ -2,22 +2,24 @@ package com.zp4rker.bettercrophoppers
 
 import com.zp4rker.bettercrophoppers.commands.GiveHopper
 import com.zp4rker.bettercrophoppers.listeners.BlockPlace
+import com.zp4rker.bettercrophoppers.listeners.HopperPickup
+import com.zp4rker.bettercrophoppers.utils.spaceLeft
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ItemSpawnEvent
-import org.bukkit.event.inventory.InventoryPickupItemEvent
+import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.plugin.java.JavaPlugin
 
-val hopperName = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c&lHopper")
+val hopperName: String = ChatColor.translateAlternateColorCodes('&', "&2&lCrop&c&lHopper")
 
 class BetterCropHoppers : JavaPlugin() {
 
     override fun onEnable() {
-        registerListeners(TestListener(this), BlockPlace(this))
+        registerListeners(TestListener(this), BlockPlace(this), HopperPickup())
 
         getCommand("givehopper").executor = GiveHopper
 
@@ -32,27 +34,26 @@ class BetterCropHoppers : JavaPlugin() {
 
 class TestListener(private val plugin: JavaPlugin) : Listener {
     @EventHandler
-    fun onHopperPickup(event: InventoryPickupItemEvent) {
-        if (event.inventory.holder !is Hopper) return
+    fun onItemSpawn(event: ItemSpawnEvent) {
+        if (event.entity.itemStack.type != Material.CACTUS && event.entity.itemStack.type != Material.SUGAR_CANE) return
 
-        val hopper = event.inventory.holder as Hopper
-        if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
-
-        val itemType = event.item.itemStack.type
-        if (itemType != Material.CACTUS && itemType != Material.SUGAR_CANE) {
-            event.isCancelled = true
-            return
+        for (hopper in event.entity.location.chunk.tileEntities.filterIsInstance<Hopper>()) {
+            if (hopper.hasMetadata("crophopper") && hopper.getMetadata("crophopper")[0].asBoolean()) {
+                event.entity.remove()
+                if (hopper.inventory.spaceLeft(event.entity.itemStack) < 1) continue
+                hopper.inventory.addItem(event.entity.itemStack)
+            }
         }
     }
 
     @EventHandler
-    fun onItemSpawn(event: ItemSpawnEvent) {
-        val hoppers = event.entity.location.chunk.tileEntities.filterIsInstance<Hopper>()
-        plugin.logger.info("${hoppers.size}")
-        for (hopper in hoppers) {
-            if (hopper.hasMetadata("crophopper") && hopper.getMetadata("crophopper")[0].asBoolean()) plugin.logger.info("found a crophopper in chunk")
-            else plugin.logger.info("found a regular hopper in chunk")
-        }
+    fun onTransfer(event: InventoryMoveItemEvent) {
+        if (event.source.holder !is Hopper) return
+
+        val hopper = event.source.holder as Hopper
+        if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
+
+        event.item = event.item.apply { amount = 64 }
     }
 
     @EventHandler
