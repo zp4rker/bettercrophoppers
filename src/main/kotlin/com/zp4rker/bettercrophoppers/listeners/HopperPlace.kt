@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
-class BlockPlace(private val plugin: JavaPlugin) : Listener {
+class HopperPlace(private val plugin: JavaPlugin) : Listener {
 
     @EventHandler
     fun onPlace(event: BlockPlaceEvent) {

@@ -6,11 +6,10 @@ import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryMoveItemEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
-class ItemTransfer(private val plugin: JavaPlugin): Listener {
+class HopperTransfer(private val plugin: JavaPlugin): Listener {
 
     @EventHandler
     fun onTransfer(event: InventoryMoveItemEvent) {
@@ -22,9 +21,9 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
         event.isCancelled = true
 
         plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
-            val remainder = hopper.inventory.removeItems(ItemStack(event.item.type, 64))
-            event.destination.addItem(ItemStack(event.item.type, 64 - remainder))
-        }, 1)
+            val remainder = hopper.inventory.removeItems(event.item.clone().apply { amount = 64 })
+            event.destination.addItem(event.item.clone().apply { amount = 64 - remainder })
+        }, 20)
     }
 
 }
