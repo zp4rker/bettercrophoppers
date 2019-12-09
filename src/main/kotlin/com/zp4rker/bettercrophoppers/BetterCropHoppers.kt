@@ -60,8 +60,8 @@ class TestListener(private val plugin: JavaPlugin) : Listener {
         plugin.server.scheduler.scheduleSyncDelayedTask(plugin, {
             val hopperLoc = hopper.block.location
             val newHopper = hopperLoc.block.state as Hopper
-            val remainder = newHopper.inventory.removeItems(ItemStack(Material.CACTUS, 10))
-            event.destination.addItem(ItemStack(Material.CACTUS, 10 - remainder))
+            val remainder = newHopper.inventory.removeItems(ItemStack(event.item.type, 10))
+            event.destination.addItem(ItemStack(event.item.type, 10 - remainder))
         }, 1)
     }
 
