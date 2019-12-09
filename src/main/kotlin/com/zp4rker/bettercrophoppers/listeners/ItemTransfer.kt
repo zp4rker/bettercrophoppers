@@ -18,7 +18,6 @@ class ItemTransfer(private val plugin: JavaPlugin): Listener {
 
         val hopper = event.source.holder as Hopper
         if (hopper.inventory.name == hopperName && !hopper.hasMetadata("crophopper")) hopper.setMetadata("crophopper", FixedMetadataValue(plugin, true))
-        if (!hopper.hasMetadata("crophopper") || !hopper.getMetadata("crophopper")[0].asBoolean()) return
 
         event.isCancelled = true
 
