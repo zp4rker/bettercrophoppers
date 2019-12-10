@@ -1,7 +1,6 @@
 package com.zp4rker.bettercrophoppers.listeners
 
 import com.zp4rker.bettercrophoppers.utils.removeItems
-import com.zp4rker.bettercrophoppers.verifyHopper
 import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -17,7 +16,6 @@ class HopperTransfer(private val plugin: JavaPlugin): Listener {
         if (event.source.holder !is Hopper) return
 
         val hopper = event.source.holder as Hopper
-        if (!verifyHopper(hopper, plugin)) return
 
         event.isCancelled = true
 
