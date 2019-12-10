@@ -6,8 +6,14 @@ import com.zp4rker.bettercrophoppers.listeners.HopperPickup
 import com.zp4rker.bettercrophoppers.listeners.HopperPlace
 import com.zp4rker.bettercrophoppers.listeners.HopperTransfer
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.block.Hopper
+import org.bukkit.command.Command
+import org.bukkit.command.CommandExecutor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
+import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -19,6 +25,7 @@ class BetterCropHoppers : JavaPlugin() {
         registerListeners(HopperPlace(this), HopperBreak(this), HopperPickup(this), HopperTransfer(this))
 
         getCommand("givehopper").executor = GiveHopper
+        getCommand("test").executor = TestCommand
 
         logger.info("Successfully enabled!")
     }
@@ -35,4 +42,16 @@ fun verifyHopper(hopper: Hopper, plugin: JavaPlugin): Boolean {
 
         true
     } else false
+}
+
+object TestCommand: CommandExecutor {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if (sender !is Player) return true
+
+        val world = sender.location.world
+
+        for (i in 1..50) world.dropItemNaturally(sender.location, ItemStack(Material.CACTUS, 64))
+
+        return true
+    }
 }

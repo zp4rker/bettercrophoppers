@@ -34,3 +34,11 @@ fun Inventory.removeItems(itemStack: ItemStack): Int {
     contents = newContents
     return remaining
 }
+
+fun Inventory.spaceLeft(itemStack: ItemStack): Int {
+    var spaceLeft = 0
+    for (content in contents) {
+        spaceLeft += if (content == null) 64 else content.maxStackSize - content.amount
+    }
+    return spaceLeft
+}

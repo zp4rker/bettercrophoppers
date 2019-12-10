@@ -16,9 +16,9 @@ class HopperPlace(private val plugin: JavaPlugin) : Listener {
     fun onPlace(event: BlockPlaceEvent) {
         if (event.blockPlaced.state is Hopper && event.itemInHand.itemMeta.displayName == hopperName) {
 
-            if (event.blockPlaced.chunk.tileEntities.filterIsInstance<Hopper>().any { verifyHopper(it, plugin) }) {
+            if (event.blockPlaced.chunk.tileEntities.filter {it is Hopper && verifyHopper(it, plugin)}.size == 2) {
                 event.isCancelled = true
-                event.player.sendMessage("${ChatColor.RED}There can only be one $hopperName ${ChatColor.RED}per chunk!")
+                event.player.sendMessage("${ChatColor.DARK_RED}There can only be two $hopperName${"s"} ${ChatColor.DARK_RED}per chunk!")
                 return
             }
 
