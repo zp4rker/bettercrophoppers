@@ -10,5 +10,3 @@ commands:
     description: Gives a CropHopper to the player.
     permission: bettercrophoppers.give
     usage: /givehopper <player> <amount>
-  test:
-    description: test command
