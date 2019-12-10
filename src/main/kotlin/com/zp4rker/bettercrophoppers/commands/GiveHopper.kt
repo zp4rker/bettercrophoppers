@@ -18,7 +18,7 @@ object GiveHopper : CommandExecutor {
 
         val player = Bukkit.getPlayerExact(args[0])
         val amount = args[1].toInt()
-        val hopper = ItemStack(Material.HOPPER, 1)
+        val hopper = ItemStack(Material.HOPPER, amount)
         hopper.itemMeta = hopper.itemMeta.apply { displayName = hopperName }
         player.inventory.addItem(hopper)
         player.sendMessage("${ChatColor.GREEN}You've been given $amount $hopperName${if (amount > 1) "s" else ""}.")
