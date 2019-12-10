@@ -1,6 +1,7 @@
 package com.zp4rker.bettercrophoppers.listeners
 
 import com.zp4rker.bettercrophoppers.hopperName
+import com.zp4rker.bettercrophoppers.verifyHopper
 import org.bukkit.ChatColor
 import org.bukkit.block.Hopper
 import org.bukkit.event.EventHandler
@@ -15,7 +16,7 @@ class HopperPlace(private val plugin: JavaPlugin) : Listener {
     fun onPlace(event: BlockPlaceEvent) {
         if (event.blockPlaced.state is Hopper && event.itemInHand.itemMeta.displayName == hopperName) {
 
-            if (event.blockPlaced.chunk.tileEntities.filterIsInstance<Hopper>().any { it.inventory.name == hopperName }) {
+            if (event.blockPlaced.chunk.tileEntities.filterIsInstance<Hopper>().any { verifyHopper(it, plugin) }) {
                 event.isCancelled = true
                 event.player.sendMessage("${ChatColor.RED}There can only be one $hopperName ${ChatColor.RED}per chunk!")
                 return
